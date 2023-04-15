@@ -5,16 +5,30 @@ from typing import List
 
 
 class UserBase(BaseModel):
-    username: str
-    email_address: EmailStr
+    fullname: str
 
 
 class UserCreate(UserBase):
+    email_address: EmailStr
     password: str
     confirm_password: str
 
     class config:
 
+        orm_mode = True
+
+
+class UserPassword(BaseModel):
+    current_password: str
+    new_password: str
+    confirm_password: str
+
+
+class ForgetPassword(BaseModel):
+    new_password: str
+    confirm_password: str
+
+    class config:
         orm_mode = True
 
 
@@ -28,6 +42,19 @@ class UrlUpdateCount(BaseModel):
 
 class UrlUpdate(BaseModel):
     key_url: str
+
+
+class contactUsBase(BaseModel):
+    full_name: str
+    email: EmailStr
+
+
+class contactUsCreate(contactUsBase):
+    mobile_number: str
+    message: str
+
+    class config:
+        orm_mode = True
 
 
 class Token(BaseModel):

@@ -5,10 +5,11 @@ from sqlalchemy.orm import relationship
 current_date = datetime.today()
 # format_date = current_date.strftime("%Y-%m-%d")
 
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(8), nullable=False, unique=True)
+    fullname = Column(String, nullable=False)
     email_address = Column(String, unique=True)
     password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
@@ -18,11 +19,14 @@ class User(Base):
     modified_by = Column(String)
     modified_on = Column(DateTime, default=current_date)
 
-    # Constraints
-    __table_args__ = (UniqueConstraint(
-        'username', 'email_address', name='unq_1'),)
+    # # Constraints
+    # __table_args__ = (UniqueConstraint(
+    #     'username', 'email_address', name='unq_1'),)
 
     url = relationship("URL", back_populates="user")
+    contact_us_user = relationship(
+        "CONTACTUS", back_populates="contact_us_onwer")
+
 
 class URL(Base):
     __tablename__ = "url"
@@ -32,7 +36,7 @@ class URL(Base):
     # random string
     key = Column(String, nullable=False)
     # secret for manage url
-    secrete_key = Column(String, nullable=False)
+    # secrete_key = Column(String, nullable=False)
     click_count = Column(Integer, default=0)
     target_url = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
@@ -42,4 +46,20 @@ class URL(Base):
     modified_on = Column(DateTime, default=current_date)
 
     user = relationship("User", back_populates="url")
-    
+
+
+class CONTACTUS(Base):
+    __tablename__ = "contact_us"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey(
+        "users.id"))
+
+    email = Column(String, nullable=False)
+    mobile_number = Column(Numeric)
+    messages = Column(String, nullable=False)
+    created_by = Column(String)
+    created_on = Column(DateTime, default=current_date)
+    modified_by = Column(String)
+    modified_on = Column(DateTime, default=current_date)
+
+    contact_us_onwer = relationship("User", back_populates="contact_us_user")

@@ -16,7 +16,7 @@ def updateCount(url_key:str,click_count_update:schemas.UrlUpdateCount,db:Session
 
                 count_visit = db.query(models.URL).filter(
                     models.URL.key == url_key).update({"click_count":click_count_update.click_count})
-                print("Total_visit_count",click_count_update.click_count)
+                
                 
                 db.commit()
                 return count_visit
@@ -39,6 +39,7 @@ def forwadToRedirect(url_key: str,request: Request, db: Session = Depends(get_db
             try:
                 updateCount(url_key,click_count_update,db)
                 return RedirectResponse(get_url.first().target_url)
+            
             except Exception as e:
                      raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e.orig}")
